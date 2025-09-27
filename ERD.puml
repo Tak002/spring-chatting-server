@@ -1,0 +1,45 @@
+@startuml
+!define TABLE(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define PRIMARY_KEY(x) <u>x</u>
+!define FOREIGN_KEY(x) <i>x</i>
+
+TABLE(USER_CHAT_TABLE, "USER_CHAT_TABLE") {
+  PRIMARY_KEY(USER_ID) : VARCHAR
+  USER_NAME : VARCHAR
+  USER_STATUS : VARCHAR
+}
+
+TABLE(Room, "Room") {
+  PRIMARY_KEY(ROOM_ID) : BIGINT
+  CREATED_AT : TIMESTAMP WITH TIME ZONE
+  UPDATED_AT : TIMESTAMP WITH TIME ZONE
+}
+
+TABLE(Chatting, "Chatting") {
+  PRIMARY_KEY(id) : BIGINT
+  FOREIGN_KEY(ROOM_ID) : ROOM
+  FOREIGN_KEY(USER_ID) : USER
+  MESSAGE : VARCHAR
+}
+
+TABLE(Participant, "Participant") {
+  PRIMARY_KEY(participantId) : BIGINT
+  FOREIGN_KEY(USER_ID) : USER
+  FOREIGN_KEY(ROOM_ID) : ROOM
+  ROOM_NAME : VARCHAR
+  CREATED_AT : DATE
+  UPDATED_AT : DATE
+}
+
+TABLE(Friend, "Friend") {
+  PRIMARY_KEY(FRIEND_SEQ) : BIGINT
+  FOREIGN_KEY(USER_ID) : USER
+  FRIEND_ID : VARCHAR
+}
+
+Chatting }o--|| Room
+Chatting }o--|| USER_CHAT_TABLE
+Participant }o--|| USER_CHAT_TABLE
+Participant }o--|| Room
+Friend }o--|| USER_CHAT_TABLE
+@enduml

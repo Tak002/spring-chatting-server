@@ -1,11 +1,13 @@
-package chat.chatting_server.domain.participant;
+package chat.chatting_server.domain.participant.entity;
 
-import chat.chatting_server.domain.room.Room;
-import chat.chatting_server.domain.user.User;
+import chat.chatting_server.domain.participant.dto.ParticipantDto;
+import chat.chatting_server.domain.room.entity.Room;
+import chat.chatting_server.domain.user.entity.User;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -17,11 +19,11 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long participantId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ROOM_ID")
     private Room room;
 
@@ -34,6 +36,7 @@ public class Participant {
     @Column(name = "UPDATED_AT")
     private LocalDate UpdatedAt;
 
+    @Builder
     public Participant(User user, Room room, String roomName, LocalDate createdAt, LocalDate updatedAt) {
         this.user = user;
         this.room = room;
@@ -44,5 +47,16 @@ public class Participant {
 
     public Participant() {
 
+    }
+
+    public ParticipantDto toDto(){
+        return ParticipantDto.builder()
+            .participantId(this.participantId)
+            .userDto(this.user.toDto())
+            .roomId(this.room.getRoomId())
+            .roomName(this.roomName)
+            .createdAt(this.createdAt)
+            .updatedAt(this.UpdatedAt)
+            .build();
     }
 }

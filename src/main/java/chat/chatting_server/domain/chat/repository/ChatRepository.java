@@ -1,0 +1,23 @@
+package chat.chatting_server.domain.chat.repository;
+
+import chat.chatting_server.domain.chat.entity.Chatting;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
+
+import java.util.List;
+
+public interface ChatRepository extends JpaRepository<Chatting, String> {
+
+    @Nullable
+    @Query("select c from Chatting c where c.room.roomId = :roomId")
+    List<Chatting> findAllByRoomId(@Param("roomId") Long roomId); // in asc order by its date and time
+
+    @Query("SELECT c FROM Chatting c WHERE c.room.roomId = :roomId")
+    Page<Chatting> findAllByRoomId(Long roomId, Pageable pageable);
+
+
+}
